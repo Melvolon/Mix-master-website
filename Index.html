@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Melvolonx - Tape Mastering Studio</title>
+  <link rel="icon" href="favicon.ico" type="image/x-icon">
+  <style>
+    body {
+      margin: 0;
+      background-color: #121212;
+      color: #e0e0e0;
+      font-family: 'Share Tech Mono', monospace;
+    }
+    header, footer {
+      text-align: center;
+      padding: 60px 20px;
+      background: linear-gradient(to bottom, #1a1a1a, #0d0d0d);
+    }
+    .btn {
+      display: inline-block;
+      margin: 10px;
+      padding: 10px 20px;
+      background: #ff4c00;
+      color: #fff;
+      text-decoration: none;
+      border-radius: 6px;
+      transition: 0.3s;
+    }
+    .btn:hover {
+      background: #ffa500;
+    }
+    .section {
+      padding: 40px 20px;
+      max-width: 1000px;
+      margin: auto;
+    }
+    .preset-box {
+      background: #1a1a1a;
+      border: 1px solid #444;
+      padding: 20px;
+      border-radius: 8px;
+      margin-bottom: 20px;
+    }
+    .preset-box del {
+      color: #888;
+      margin-right: 8px;
+    }
+    .cart-section {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      background: #1a1a1a;
+      padding: 20px;
+      border: 1px solid #333;
+      border-radius: 10px;
+      box-shadow: 0 0 10px #000;
+      z-index: 1000;
+      width: 300px;
+      max-width: 90vw;
+      box-sizing: border-box;
+    }
+    @media (max-width: 600px) {
+      .cart-section {
+        top: auto;
+        bottom: 20px;
+        left: 10px;
+        right: 10px;
+        width: auto;
+        max-width: none;
+      }
+    }
+    @keyframes shake {
+  0% { transform: translateX(0); }
+  25% { transform: translateX(-4px); }
+  50% { transform: translateX(4px); }
+  75% { transform: translateX(-4px); }
+  100% { transform: translateX(0); }
+}
+
+.shake {
+  animation: shake 0.4s;
+}
+
+.warning {
+  background-color: #b00020 !important;
+}
+  </style>
+</head>
+<body>
+  <div id="cart-box" class="cart-section"></div>
+
+  <header>
+    <h1>Tape Vibe Mastering</h1>
+    <p>Vintage-Sound. Modern Tools.</p>
+  </header>
+
+  <section class="section" id="mix-angebote">
+    <h2>🎧 Mix & Mastering buchen</h2>
+
+    <div class="preset-box">
+      <h3>Basic Mix – 49 €</h3>
+      <ul>
+        <li>Mix deiner rohen Vocal-Spuren auf fertigen Beat</li>
+        <li>Lautstärkeausgleich, EQ, Kompression</li>
+        <li>1 Revision inklusive</li>
+      </ul>
+      <a href="#" class="btn" onclick="addToCart('Basic Mix – 49 €'); return false;">In den Warenkorb</a>
+    </div>
+
+    <div class="preset-box">
+      <h3></del> Standard Mix & Master – <del>100€</del>89€ </h3>
+      <ul>
+        <li>Vollständiger Mix inkl. Effekte</li>
+        <li>Inkl. professionellem Mastering</li>
+        <li>Bis zu 3 Revisionen inklusive</li>
+      </ul>
+      <a href="#" class="btn" onclick="addToCart('Standard Mix & Master – 89 €'); return false;">In den Warenkorb</a>
+    </div>
+
+    <div class="preset-box">
+      <h3> Premium Mix & Master – <del>200 €</del>149 €</h3>
+      <ul>
+        <li>High-End Mix & Master</li>
+        <li>Unbegrenzte Revisionen</li>
+        <li>Persönliche Betreuung</li>
+      </ul>
+      <a href="#" class="btn" onclick="addToCart('Premium Mix & Master – 149 €'); return false;">In den Warenkorb</a>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>🔧 Preset Chains</h2>
+    <div class="preset-box">
+      <h3>Stock Chain – 19 €</h3>
+      <p>Ideal für FL Studio mit Stock Plugins</p>
+      <a href="#" class="btn" onclick="addToCart('Preset Chain - Stock'); return false;">In den Warenkorb</a>
+    </div>
+    <div class="preset-box">
+      <h3>Waves Chain – 29 €</h3>
+      <p>Optimiert für WAVES Plugins</p>
+      <a href="#" class="btn" onclick="addToCart('Preset Chain - Waves'); return false;">In den Warenkorb</a>
+    </div>
+    <div class="preset-box">
+      <h3>Analog Chain – 39 €</h3>
+      <p>Für UAD, Slate & Co</p>
+      <a href="#" class="btn" onclick="addToCart('Preset Chain - Analog'); return false;">In den Warenkorb</a>
+    </div>
+    <div class="preset-box">
+      <h3>Zusätzliche Revision – 9 €</h3>
+      <ul>
+        <li>1 weitere Revision auf Wunsch</li>
+      </ul>
+      <a href="#" class="btn" onclick="addToCart('Zusätzliche Revision – 9 €'); return false;">In den Warenkorb</a>
+    </div>
+  <section class="section" id="tutorial-video">
+  <h2 style="text-align:center;">🎥 Anwendung der Preset Chains</h2>
+  <p style="text-align:center;">In diesem Video zeige ich dir, wie du meine Preset Chains optimal in deiner DAW einsetzt.</p>
+  <div style="max-width: 600px; margin: 0 auto;">
+    <div style="position:relative;padding-bottom:56.25%;height:0;overflow:hidden;">
+      <iframe src="https://www.youtube.com/embed/DEIN_VIDEO_ID" 
+              frameborder="0" allowfullscreen 
+              style="position:absolute;top:0;left:0;width:100%;height:100%;">
+      </iframe>
+    </div>
+  </div>
+</section>
+</section>
+  <section class="section" id="kontakt">
+    <h2>📬 Kontakt</h2>
+    <form action="https://formsubmit.co/kontakt.engineermelo@gmail.com" method="POST" style="display: flex; flex-direction: column; gap: 10px; max-width: 600px; margin: auto;">
+  <input type="text" name="name" placeholder="Dein Name" required style="padding:10px; border-radius:5px; border:none;">
+  <input type="email" name="email" placeholder="Deine E-Mail" required style="padding:10px; border-radius:5px; border:none;">
+  <textarea name="nachricht" placeholder="Deine Nachricht" rows="5" required style="padding:10px; border-radius:5px; border:none;"></textarea>
+  <input type="hidden" name="_captcha" value="false">
+  <input type="hidden" name="_template" value="table">
+  <button type="submit" class="btn">Absenden</button>
+</form>
+  </section>
+
+  <section class="section" id="rechtliches">
+    <h2>📄 Rechtliches</h2>
+    <div class="preset-box">
+      <h3>Impressum</h3>
+      <p>
+        Melvin Küppers<br>
+        Musterstraße 123<br>
+        12345 Musterstadt<br>
+        Deutschland<br>
+        E-Mail: kontakt@melvolonx.de
+      </p>
+    </div>
+    <div class="preset-box">
+      <h3>Datenschutz</h3>
+      <p>Diese Website speichert keine personenbezogenen Daten ohne deine Zustimmung. Deine Eingaben im Kontaktformular werden ausschließlich zur Bearbeitung deiner Anfrage verwendet.</p>
+    </div>
+    <div class="preset-box">
+      <h3>AGB</h3>
+      <p>Unsere vollständigen AGB findest du hier: <a href="agb.html" target="_blank" style="color:#ffa500; text-decoration:underline;">Allgemeine Geschäftsbedingungen (AGB)</a>.</p>
+    </div>
+  </section>
+
+  <footer>
+    <p>&copy; 2025 Melvolonx</p>
+  </footer>
+
+ <script>
+  const prices = {
+    'Basic Mix – 49 €': 49,
+    'Standard Mix & Master – 89 €': 89,
+    'Premium Mix & Master – 149 €': 149,
+    'Zusätzliche Revision – 9 €': 9,
+    'Preset Chain - Stock': 19,
+    'Preset Chain - Waves': 29,
+    'Preset Chain - Analog': 39
+  };
+
+  function renderCart() {
+    let cart = JSON.parse(localStorage.getItem('cart')) || [];
+    let cartBox = document.getElementById('cart-box');
+    if (!cartBox) return;
+    let total = 0;
+    let items = cart.map((item, index) => {
+      let price = prices[item] || 0;
+      total += price;
+      return `<li>${item} <small>(${price} €)</small> <button onclick="removeFromCart(${index})" style="background:none;color:red;border:none;font-size:0.9em;">&times;</button></li>`;
+    }).join('');
+    let mwst = total * 0.19;
+    let final = total + mwst;
+    cartBox.innerHTML = `
+      <strong>🛒 Warenkorb:</strong>
+      <ul style='padding-left: 1em;'>${items}</ul>
+      <p style='margin-top:10px;'>Zwischensumme: ${total.toFixed(2)} €<br>
+      + MwSt (19%): ${mwst.toFixed(2)} €<br>
+      <strong>Gesamt: ${final.toFixed(2)} €</strong></p>
+      <button class='btn' onclick="goToCheckout()">Jetzt bezahlen</button>
+      <button onclick="clearCart()" style='margin-top:10px;background:#800;'>Leeren</button>
+    `;
+  }
+
+  function addToCart(item) {
+    let cart = JSON.parse(localStorage.getItem('cart')) || [];
+    cart.push(item);
+    localStorage.setItem('cart', JSON.stringify(cart));
+    renderCart();
+    showAddedNotification("✔ Zum Warenkorb hinzugefügt");
+  }
+
+  function removeFromCart(index) {
+    let cart = JSON.parse(localStorage.getItem('cart')) || [];
+    cart.splice(index, 1);
+    localStorage.setItem('cart', JSON.stringify(cart));
+    renderCart();
+  }
+
+  function clearCart() {
+    localStorage.removeItem('cart');
+    renderCart();
+  }
+
+  function goToCheckout() {
+    let cart = JSON.parse(localStorage.getItem('cart')) || [];
+    let btn = document.querySelector('.btn');
+
+    if (cart.length === 0) {
+      btn.classList.add('warning', 'shake');
+      setTimeout(() => {
+        btn.classList.remove('warning', 'shake');
+      }, 600);
+      return;
+    }
+
+    window.location.href = "checkout.html";
+  }
+
+  function showAddedNotification(text) {
+    const note = document.createElement('div');
+    note.textContent = text;
+    note.style.position = 'fixed';
+    note.style.top = '20px';
+    note.style.right = '20px';
+    note.style.background = '#28a745';
+    note.style.color = 'white';
+    note.style.padding = '10px 20px';
+    note.style.borderRadius = '6px';
+    note.style.zIndex = 9999;
+    note.style.boxShadow = '0 0 10px black';
+    document.body.appendChild(note);
+    setTimeout(() => note.remove(), 2000);
+  }
+
+  document.addEventListener('DOMContentLoaded', renderCart);
+</script>

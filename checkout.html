@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Checkout - Tape Mastering</title>
+  <link rel="icon" href="favicon.ico" type="image/x-icon">
+  <!-- jsPDF für Rechnung-Download -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Share Tech Mono', monospace;
+      background-color: #121212;
+      color: #e0e0e0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      min-height: 100vh;
+      padding: 20px;
+    }
+    .box {
+      background: linear-gradient(135deg, #1a1a1a 90%, #222 100%);
+      padding: 38px 26px 32px 26px;
+      border-radius: 14px;
+      border: 1px solid #444;
+      max-width: 460px;
+      width: 100%;
+      margin-top: 54px;
+      box-shadow: 0 8px 24px 0 #000a;
+      text-align: center;
+      animation: fadeIn 1s cubic-bezier(.5,1.3,.5,1) both;
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(40px);}
+      to { opacity: 1; transform: translateY(0);}
+    }
+    h1 {
+      margin-bottom: 6px;
+      color: #ffa500;
+      font-size: 2.1rem;
+      letter-spacing: 0.01em;
+      font-weight: bold;
+      text-shadow: 0 2px 16px #ff4c0022;
+    }
+    .sub {
+      color: #aaa;
+      margin-bottom: 22px;
+      font-size: 1.13rem;
+      font-style: italic;
+    }
+    table {
+      width: 100%;
+      color: #e0e0e0;
+      margin-bottom: 16px;
+      border-collapse: collapse;
+      font-size: 1.05em;
+      border-radius: 10px;
+      overflow: hidden;
+      box-shadow: 0 1px 4px #0002;
+    }
+    th, td {
+      border-bottom: 1px solid #292929;
+      padding: 10px 7px;
+    }
+    th {
+      background: #181818;
+      color: #ffa500;
+      font-weight: 500;
+      border-bottom: 2px solid #222;
+    }
+    tr:last-child td { border-bottom: none; }
+    tfoot td { font-weight: bold; }
+    .btn {
+      display: inline-block;
+      padding: 13px 28px;
+      margin: 18px 7px 10px 7px;
+      background: linear-gradient(92deg, #ff4c00 85%, #ffa500 120%);
+      color: #fff;
+      font-size: 1.08em;
+      text-decoration: none;
+      border-radius: 8px;
+      box-shadow: 0 1px 8px #ff4c0044;
+      font-weight: 500;
+      transition: background 0.2s, transform 0.15s;
+      border: none;
+      cursor: pointer;
+      outline: none;
+    }
+    .btn[disabled], .btn:disabled {
+      opacity: .5;
+      cursor: not-allowed;
+      filter: grayscale(70%);
+    }
+    .btn:hover:enabled {
+      background: linear-gradient(100deg, #ffa500 70%, #ff4c00 130%);
+      transform: translateY(-2px) scale(1.04);
+      color: #222;
+    }
+    .form-section {
+      text-align: left;
+      margin: 30px auto 6px auto;
+      background: #181818;
+      border: 1px solid #292929;
+      border-radius: 12px;
+      padding: 22px 18px 18px 18px;
+      max-width: 380px;
+      box-shadow: 0 1px 6px #0002;
+    }
+    .form-section label {
+      font-size: 1em;
+      font-weight: 500;
+      margin-bottom: 3px;
+      color: #ffa500;
+      display: block;
+      margin-top: 11px;
+    }
+    .form-section input,
+    .form-section textarea {
+      width: 100%;
+      margin-bottom: 7px;
+      padding: 10px 8px;
+      background: #232323;
+      color: #e0e0e0;
+      border: 1px solid #333;
+      border-radius: 6px;
+      font-size: 1em;
+      font-family: inherit;
+      outline: none;
+      transition: border .2s;
+    }
+    .form-section input:focus, .form-section textarea:focus {
+      border: 1.5px solid #ffa500;
+      background: #242420;
+    }
+    .empty {
+      color: #ff4c00;
+      font-weight: bold;
+      padding: 24px 0 14px 0;
+      font-size: 1.13rem;
+    }
+    /* --- Success-Box --- */
+    .success-box {
+      background: linear-gradient(135deg, #1a1a1a 85%, #222 100%);
+      padding: 38px 26px 32px 26px;
+      border-radius: 14px;
+      border: 1px solid #444;
+      max-width: 460px;
+      width: 100%;
+      box-shadow: 0 8px 24px 0 #000a;
+      text-align: center;
+      animation: fadeIn 0.8s cubic-bezier(.5,1.3,.5,1) both;
+      margin-top: 54px;
+      display: none;
+    }
+    .success-icon {
+      font-size: 3rem;
+      color: #23d160;
+      margin-bottom: 15px;
+      text-shadow: 0 2px 20px #23d16044;
+      display: block;
+      line-height: 1;
+    }
+    .info {
+      color: #aaa;
+      margin-bottom: 25px;
+      font-size: 1.07rem;
+      font-style: italic;
+    }
+    .small {
+      font-size: .93em;
+      color: #666;
+      margin-top: 8px;
+      margin-bottom: 0;
+    }
+    @media (max-width: 700px) {
+      .box, .success-box {
+        max-width: 97vw;
+        margin-top: 22px;
+        padding: 22px 6vw 18px 6vw;
+      }
+      table, th, td {
+        font-size: 1em;
+      }
+      .btn {padding: 13px 7vw;}
+      .form-section {padding:14px 4vw 12px 4vw;}
+    }
+  </style>
+</head>
+<body>
+
+  <div class="box" id="checkout-box">
+    <h1>Fast geschafft!</h1>
+    <div class="sub">Überprüfe jetzt deine Bestellung und trage deine Rechnungsdaten ein.</div>
+    <div id="cart-summary"></div>
+    <form class="form-section" id="invoice-form" autocomplete="off" action="https://formsubmit.co/melvolonx@gmail.com" method="POST" enctype="multipart/form-data" target="_blank">
+      <label for="name">Vor- und Nachname*</label>
+      <input type="text" id="name" name="Name" required>
+      <label for="street">Straße und Hausnummer*</label>
+      <input type="text" id="street" name="Straße" required>
+      <label for="zip">PLZ*</label>
+      <input type="text" id="zip" name="PLZ" required pattern="[0-9]{5}">
+      <label for="city">Stadt*</label>
+      <input type="text" id="city" name="Stadt" required>
+      <label for="email">E-Mail*</label>
+      <input type="email" id="email" name="E-Mail" required>
+      <label for="notes">Bemerkung zur Bestellung (optional)</label>
+      <textarea id="notes" name="Bemerkung" rows="2"></textarea>
+      <!-- Unsichtbare Felder für Rechnungsnummer & Anhang -->
+      <input type="hidden" id="invoice-number" name="Rechnungsnummer">
+      <input type="hidden" name="_captcha" value="false">
+      <input type="hidden" name="_template" value="table">
+      <input type="hidden" id="invoice-pdf-base64" name="Rechnung_PDF">
+      <!-- Button: Rechnung & Mail senden, PayPal-Button triggert das auch -->
+      <button type="submit" class="btn" id="form-submit-btn" style="margin-bottom:8px;width:100%;">Rechnung per E-Mail erhalten</button>
+    </form>
+    <a class="btn" id="paypal-btn" href="https://www.paypal.com/paypalme/DEINE_PAYPAL" target="_blank" disabled>Mit PayPal bezahlen & Rechnung herunterladen</a>
+    <a class="btn" id="download-invoice" href="#" style="margin-left:7px;margin-bottom:7px;">Rechnung als PDF speichern</a>
+    <br>
+    <a class="btn" href="index.html" style="margin-top:4px;">Zurück zur Startseite</a>
+  </div>
+
+  <div class="success-box" id="thankyou-message">
+    <span class="success-icon">✔️</span>
+    <h1>Bestellung erfolgreich!</h1>
+    <div class="info">
+      Vielen Dank für deinen Kauf.<br>
+      Deine Bestellung ist bei uns eingegangen und wird schnellstmöglich bearbeitet.<br><br>
+      <b>Check deine E-Mails!</b><br>
+      Du kannst die Rechnung unten noch einmal herunterladen.
+    </div>
+    <a id="download-invoice-success" href="#" class="btn" style="margin-bottom:15px;">Rechnung als PDF speichern</a>
+    <br>
+    <a href="index.html" class="btn">Zurück zur Startseite</a>
+    <p class="small">Bei Fragen schreib uns an kontakt@melvolonx.de</p>
+  </div>
+
+  <script>
+    // Preise
+    const prices = {
+      'Basic Mix – 49 €': 49,
+      'Standard Mix & Master – 89 €': 89,
+      'Premium Mix & Master – 149 €': 149,
+      'Zusätzliche Revision – 9 €': 9,
+      'Preset Chain - Stock': 19,
+      'Preset Chain - Waves': 29,
+      'Preset Chain - Analog': 39
+    };
+
+    let lastInvoiceData = null;
+    let lastInvoiceNumber = null;
+    let lastInvoicePDFDataUrl = null;
+
+    // Erzeuge eindeutige Rechnungsnummer
+    function createInvoiceNumber() {
+      const now = new Date();
+      const y = now.getFullYear();
+      const m = String(now.getMonth()+1).padStart(2,"0");
+      const d = String(now.getDate()).padStart(2,"0");
+      const rand = Math.floor(Math.random()*9000+1000);
+      return `MX-${y}${m}${d}-${rand}-${now.getTime().toString().slice(-5)}`;
+    }
+
+    // Warenkorb anzeigen
+    function renderCheckout() {
+      let cart = JSON.parse(localStorage.getItem('cart')) || [];
+      let container = document.getElementById('cart-summary');
+      if (cart.length === 0) {
+        container.innerHTML = `<p class="empty">Dein Warenkorb ist leer.</p>`;
+        document.getElementById("paypal-btn").style.display = "none";
+        document.getElementById("download-invoice").style.display = "none";
+        document.getElementById("form-submit-btn").style.display = "none";
+        return;
+      }
+      let total = 0;
+      let rows = cart.map(item => {
+        let price = prices[item] || 0;
+        total += price;
+        return `<tr><td>${item}</td><td style="text-align:right;">${price.toFixed(2)} €</td></tr>`;
+      }).join('');
+      let mwst = total * 0.19;
+      let final = total + mwst;
+      container.innerHTML = `
+        <table>
+          <thead>
+            <tr><th>Produkt</th><th>Preis</th></tr>
+          </thead>
+          <tbody>
+            ${rows}
+          </tbody>
+          <tfoot>
+            <tr><td>Zwischensumme</td><td style="text-align:right;">${total.toFixed(2)} €</td></tr>
+            <tr><td>+ MwSt (19%)</td><td style="text-align:right;">${mwst.toFixed(2)} €</td></tr>
+            <tr><td><strong>Gesamt</strong></td><td style="text-align:right;"><strong>${final.toFixed(2)} €</strong></td></tr>
+          </tfoot>
+        </table>
+      `;
+    }
+
+    // PDF-Rechnung erzeugen (mit jsPDF)
+    function generateInvoicePDF(formData, cart, invoiceNumber, callback) {
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF();
+
+      // Verkäuferdaten
+      const seller = [
+        "Melvin Küppers",
+        "Musterstraße 123",
+        "12345 Musterstadt",
+        "Deutschland",
+        "kontakt@melvolonx.de"
+      ];
+
+      let y = 15;
+      doc.setFontSize(18);
+      doc.text("Rechnung", 15, y);
+      doc.setFontSize(12);
+      doc.text("Rechnungs-Nr: " + invoiceNumber, 140, y);
+      y += 10;
+
+      // Verkäufer
+      doc.setFontSize(11);
+      doc.text("Verkäufer:", 15, y);
+      seller.forEach(line => {
+        y += 5;
+        doc.text(line, 15, y);
+      });
+
+      y += 8;
+      doc.setFontSize(11);
+      doc.text("Rechnung an:", 15, y);
+      [
+        formData.name,
+        formData.street,
+        `${formData.zip} ${formData.city}`,
+        formData.email
+      ].forEach(line => {
+        y += 5;
+        doc.text(line, 15, y);
+      });
+
+      y += 12;
+      doc.setFontSize(13);
+      doc.text("Bestellte Produkte:", 15, y);
+      y += 7;
+      doc.setFontSize(11);
+
+      let total = 0;
+      cart.forEach(item => {
+        let price = prices[item] || 0;
+        doc.text(item, 15, y);
+        doc.text(price.toFixed(2) + " €", 165, y, {align: 'right'});
+        total += price;
+        y += 7;
+      });
+
+      y += 3;
+      doc.setLineWidth(0.3);
+      doc.line(15, y, 195, y);
+
+      let mwst = total * 0.19;
+      let final = total + mwst;
+
+      y += 7;
+      doc.setFontSize(12);
+      doc.text("Zwischensumme:", 145, y, {align: 'right'});
+      doc.text(total.toFixed(2) + " €", 195, y, {align: 'right'});
+      y += 6;
+      doc.text("MwSt (19%):", 145, y, {align: 'right'});
+      doc.text(mwst.toFixed(2) + " €", 195, y, {align: 'right'});
+      y += 6;
+      doc.setFontSize(14);
+      doc.setTextColor(255, 76, 0);
+      doc.text("Gesamt:", 145, y, {align: 'right'});
+      doc.text(final.toFixed(2) + " €", 195, y, {align: 'right'});
+      doc.setTextColor(34,34,34);
+
+      y += 12;
+      doc.setFontSize(10);
+      doc.setTextColor(150, 150, 150);
+      doc.text("Rechnungsdatum: " + new Date().toLocaleDateString(), 15, y);
+      doc.text("Rechnungs-Nr: " + invoiceNumber, 110, y);
+      y += 7;
+      doc.text("Vielen Dank für deinen Einkauf!", 15, y);
+
+      // Für Mailversand PDF als Base64 an das hidden input hängen
+      if (callback) {
+        doc.output("dataurlstring", {filename:"Rechnung-Melvolonx.pdf"});
+        callback(doc);
+      } else {
+        doc.save(`Rechnung-${invoiceNumber}.pdf`);
+      }
+    }
+
+    // Formular-Validierung
+    function checkFormValid() {
+      const form = document.getElementById("invoice-form");
+      const btn = document.getElementById("paypal-btn");
+      if (form.checkValidity()) {
+        btn.removeAttribute("disabled");
+      } else {
+        btn.setAttribute("disabled", true);
+      }
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+      renderCheckout();
+      document.getElementById("invoice-form").addEventListener("input", checkFormValid);
+
+      // Rechnung generieren & speichern
+      document.getElementById('download-invoice').addEventListener('click', function(e){
+        e.preventDefault();
+        const form = document.getElementById("invoice-form");
+        if (!form.checkValidity()) {
+          alert("Bitte alle Pflichtfelder für die Rechnung ausfüllen.");
+          return false;
+        }
+        const formData = {
+          name: form.name.value,
+          street: form.street.value,
+          zip: form.zip.value,
+          city: form.city.value,
+          email: form.email.value,
+          notes: form.notes.value
+        };
+        const cart = JSON.parse(localStorage.getItem('cart')) || [];
+        const invoiceNumber = createInvoiceNumber();
+        lastInvoiceNumber = invoiceNumber;
+        lastInvoiceData = {formData, cart};
+        generateInvoicePDF(formData, cart, invoiceNumber);
+      });
+
+      // PDF für E-Mail erzeugen, dann Form abschicken (Rechnung per Mail-Button)
+      document.getElementById('invoice-form').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const form = document.getElementById("invoice-form");
+        if (!form.checkValidity()) {
+          checkFormValid();
+          return false;
+        }
+        const formData = {
+          name: form.name.value,
+          street: form.street.value,
+          zip: form.zip.value,
+          city: form.city.value,
+          email: form.email.value,
+          notes: form.notes.value
+        };
+        const cart = JSON.parse(localStorage.getItem('cart')) || [];
+        const invoiceNumber = createInvoiceNumber();
+        lastInvoiceNumber = invoiceNumber;
+        lastInvoiceData = {formData, cart};
+        // PDF als base64 erzeugen
+        generateInvoicePDF(formData, cart, invoiceNumber, function(doc){
+          // PDF als DataURL -> FormSubmit verstecktes Feld befüllen
+          var pdfBase64 = doc.output('datauristring');
+          // Nur base64-Teil
+          document.getElementById('invoice-pdf-base64').value = pdfBase64.split(',')[1];
+          document.getElementById('invoice-number').value = invoiceNumber;
+          setTimeout(() => form.submit(), 200); // absenden
+        });
+      });
+
+      // PayPal-Button
+      var paypalBtn = document.getElementById('paypal-btn');
+      if (paypalBtn) {
+        paypalBtn.addEventListener('click', function(e) {
+          const form = document.getElementById("invoice-form");
+          if (!form.checkValidity()) {
+            checkFormValid();
+            e.preventDefault();
+            return false;
+          }
+          const formData = {
+            name: form.name.value,
+            street: form.street.value,
+            zip: form.zip.value,
+            city: form.city.value,
+            email: form.email.value,
+            notes: form.notes.value
+          };
+          const cart = JSON.parse(localStorage.getItem('cart')) || [];
+          const invoiceNumber = createInvoiceNumber();
+          lastInvoiceNumber = invoiceNumber;
+          lastInvoiceData = {formData, cart};
+          generateInvoicePDF(formData, cart, invoiceNumber);
+          // Erfolgsbox zeigen
+          setTimeout(() => {
+            document.getElementById('checkout-box').style.display = 'none';
+            document.getElementById('thankyou-message').style.display = 'block';
+            localStorage.removeItem('cart');
+          }, 1800);
+        });
+      }
+
+      // Rechnung nochmal auf Danke-Seite downloaden
+      document.getElementById('download-invoice-success').addEventListener('click', function(e){
+        e.preventDefault();
+        if (lastInvoiceData && lastInvoiceNumber && lastInvoiceData.formData && lastInvoiceData.cart) {
+          generateInvoicePDF(lastInvoiceData.formData, lastInvoiceData.cart, lastInvoiceNumber);
+        } else {
+          alert("Bitte zuerst auf der vorherigen Seite Rechnung erzeugen!");
+        }
+      });
+    });
+  </script>
+</body>
+</html>
